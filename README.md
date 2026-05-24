@@ -158,9 +158,9 @@ getCandidates(): Observable<Candidate[]> {
 ![Analytics](./public/Laptop/l2.png)
 
 # On Mobile
-![Dashboard](.\public\Mobile\M2.jpg)
-![Jobs](.\public\Mobile\M4.jpg)
-![Analytics](.\public\Mobile\M3.jpg)
+![Dashboard](./public/Mobile/M2.jpg)
+![Jobs](./public/Mobile/M4.jpg)
+![Analytics](./public/Mobile/M3.jpg)
 
 
 ## 🤝 Contributing
