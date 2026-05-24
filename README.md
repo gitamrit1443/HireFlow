@@ -153,9 +153,9 @@ getCandidates(): Observable<Candidate[]> {
 ## Preview Images
 
 # On Laptop
-![Dasboard](.\public\Laptop\l1.png)
-![Pipeline](.\public\Laptop\l3.png)
-![Analytics](.\public\Laptop\l2.png)
+![Dasboard](./public/Laptop/l1.png)
+![Pipeline](./public/Laptop/l3.png)
+![Analytics](./public/Laptop/l2.png)
 
 # On Mobile
 ![Dashboard](.\public\Mobile\M2.jpg)
