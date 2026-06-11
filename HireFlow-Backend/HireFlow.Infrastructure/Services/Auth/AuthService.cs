@@ -6,6 +6,7 @@ using HireFlow.Domain.Enums;
 using HireFlow.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 namespace HireFlow.Infrastructure.Services.Auth;
 
@@ -38,6 +39,8 @@ public class AuthService : IAuthService
     public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request, string ipAddress)
     {
         var user = await _db.Users
+            .Include(u => u.CandidateProfile)
+            .Include(u => u.RecruiterProfile)
             .FirstOrDefaultAsync(u => u.Email == request.Email.ToLower().Trim() && !u.IsDeleted);
 
         // OWASP: Same error message for invalid email/password (no user enumeration)
@@ -185,9 +188,26 @@ public class AuthService : IAuthService
 
         // Create role profile
         if (request.Role == UserRole.Candidate)
-            _db.CandidateProfiles.Add(new CandidateProfile { UserId = user.Id });
+            _db.CandidateProfiles.Add(new CandidateProfile
+            {
+                UserId = user.Id,
+                Headline = request.Title?.Trim(),
+                CurrentRole = request.Title?.Trim(),
+                CurrentCompany = request.Company?.Trim(),
+                Location = request.Location?.Trim(),
+                YearsOfExperience = request.ExperienceYears,
+                Skills = JsonSerializer.Serialize(request.Skills
+                    .Where(skill => !string.IsNullOrWhiteSpace(skill))
+                    .Select(skill => skill.Trim())
+                    .Distinct(StringComparer.OrdinalIgnoreCase))
+            });
         else if (request.Role == UserRole.Recruiter)
-            _db.RecruiterProfiles.Add(new RecruiterProfile { UserId = user.Id });
+            _db.RecruiterProfiles.Add(new RecruiterProfile
+            {
+                UserId = user.Id,
+                Title = request.Title?.Trim(),
+                Department = request.Department?.Trim()
+            });
 
         await _db.SaveChangesAsync();
 
@@ -403,7 +423,10 @@ public class AuthService : IAuthService
 
     public async Task<Result<UserDto>> GetCurrentUserAsync(Guid userId)
     {
-        var user = await _db.Users.FindAsync(userId);
+        var user = await _db.Users
+            .Include(u => u.CandidateProfile)
+            .Include(u => u.RecruiterProfile)
+            .FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) return Result<UserDto>.Failure("User not found.");
         return Result<UserDto>.Success(MapToUserDto(user));
     }
@@ -412,6 +435,11 @@ public class AuthService : IAuthService
 
     private async Task<LoginResponse> GenerateTokensAsync(User user, string ipAddress)
     {
+        if (user.Role == UserRole.Candidate)
+            await _db.Entry(user).Reference(u => u.CandidateProfile).LoadAsync();
+        else if (user.Role == UserRole.Recruiter)
+            await _db.Entry(user).Reference(u => u.RecruiterProfile).LoadAsync();
+
         var accessToken = _tokenService.GenerateAccessToken(user);
         var rawRefresh = _tokenService.GenerateRefreshToken();
 
@@ -478,17 +506,40 @@ public class AuthService : IAuthService
             .Select(i => secret.Substring(i * 4, 4)));
     }
 
-    private static UserDto MapToUserDto(User user) => new()
+    private static UserDto MapToUserDto(User user)
     {
-        Id = user.Id,
-        Email = user.Email,
-        FirstName = user.FirstName,
-        LastName = user.LastName,
-        FullName = user.FullName,
-        Role = user.Role,
-        Company = user.Company,
-        ProfileImageUrl = user.ProfileImageUrl,
-        TwoFactorEnabled = user.TwoFactorEnabled,
-        IsEmailVerified = user.IsEmailVerified
-    };
+        var candidate = user.CandidateProfile;
+        var recruiter = user.RecruiterProfile;
+        var skills = new List<string>();
+        if (!string.IsNullOrWhiteSpace(candidate?.Skills))
+        {
+            try
+            {
+                skills = JsonSerializer.Deserialize<List<string>>(candidate.Skills) ?? new();
+            }
+            catch (JsonException)
+            {
+                skills = new();
+            }
+        }
+
+        return new UserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            FullName = user.FullName,
+            Role = user.Role,
+            Company = user.Company,
+            ProfileImageUrl = user.ProfileImageUrl,
+            TwoFactorEnabled = user.TwoFactorEnabled,
+            IsEmailVerified = user.IsEmailVerified,
+            Title = recruiter?.Title ?? candidate?.CurrentRole ?? candidate?.Headline,
+            Department = recruiter?.Department,
+            Location = candidate?.Location,
+            ExperienceYears = candidate?.YearsOfExperience,
+            Skills = skills
+        };
+    }
 }

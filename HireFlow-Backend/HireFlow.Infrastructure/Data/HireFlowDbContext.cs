@@ -189,6 +189,8 @@ public class HireFlowDbContext : DbContext
              .HasForeignKey(n => n.UserId)
              .OnDelete(DeleteBehavior.Cascade);
         });
+
+       
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

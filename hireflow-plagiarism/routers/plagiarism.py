@@ -32,6 +32,9 @@ def full_analysis(request: AnalysisRequest):
     This is the primary endpoint called by the ASP.NET backend.
     Returns combined result that frontend displays to recruiter.
     """
+    if not request.cover_letter.strip():
+        raise HTTPException(status_code=400, detail="cover_letter cannot be empty.")
+
     plagiarism_result = check_plagiarism(
         text=request.cover_letter,
         existing_texts=request.existing_cover_letters,
@@ -90,6 +93,7 @@ def bulk_analysis(request: BulkAnalysisRequest):
     if len(request.applications) > 50:
         raise HTTPException(status_code=400, detail="Max 50 applications per bulk request.")
 
+    risk_order = {"low": 0, "medium": 1, "high": 2, "critical": 3}
     results = []
     for app in request.applications:
         plagiarism_result = check_plagiarism(
@@ -111,7 +115,7 @@ def bulk_analysis(request: BulkAnalysisRequest):
             "plagiarism_percent": plagiarism_result["similarity_percent"],
             "spam_percent": spam_result["spam_percent"],
             "overall_risk": plagiarism_result["risk_level"]
-                if plagiarism_result["similarity_percent"] >= spam_result["spam_percent"]
+                if risk_order[plagiarism_result["risk_level"]] >= risk_order[spam_result["risk_level"]]
                 else spam_result["risk_level"],
             "is_flagged": plagiarism_result["is_plagiarised"] or spam_result["is_spam"]
         })

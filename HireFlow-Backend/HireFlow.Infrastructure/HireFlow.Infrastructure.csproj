@@ -11,30 +11,41 @@
   <ItemGroup>
     <!-- EF Core + SQL Server -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"    Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools"     Version="8.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design"    Version="8.0.6">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+
     <!-- Auth & Security -->
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="Otp.NET" Version="1.4.1" />
-    <PackageReference Include="QRCoder" Version="1.6.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt"               Version="7.6.0" />
+    <PackageReference Include="BCrypt.Net-Next"                                Version="4.0.3" />
+    <PackageReference Include="Otp.NET"                                        Version="1.4.1" />
+    <PackageReference Include="QRCoder"                                        Version="1.6.0" />
+
     <!-- Email -->
-    <PackageReference Include="MailKit" Version="4.7.0" />
-    <PackageReference Include="MimeKit" Version="4.7.0" />
+    <!-- FIX: 4.7.0 has moderate+high severity vulnerabilities (GHSA-9j88-vvj5-vhgr,  -->
+    <!-- GHSA-g7hc-96xr-gvvx, GHSA-gmc6-fwg3-75m5). Patched in 4.8.0.                -->
+    <PackageReference Include="MailKit"  Version="4.8.0" />
+    <PackageReference Include="MimeKit" Version="4.8.0" />
+
     <!-- Background Jobs -->
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
-    <PackageReference Include="Hangfire.SqlServer" Version="1.8.14" />
+    <PackageReference Include="Hangfire.SqlServer"  Version="1.8.14" />
+
     <!-- HTTP -->
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+
     <!-- AutoMapper -->
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <!-- FIX: AutoMapper pinned to 12.0.1 — 13.0.1 has high severity vulnerability   -->
+    <!-- GHSA-rvv3-g6hj-g44x. Extensions 12.0.1 requires exactly AutoMapper 12.0.1.  -->
+    <PackageReference Include="AutoMapper"                                           Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+
     <!-- Polly for resilience -->
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.8.0" />
   </ItemGroup>

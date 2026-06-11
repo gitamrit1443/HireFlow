@@ -9,6 +9,13 @@ import math
 from collections import Counter
 from typing import Optional
 
+_STOP_WORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
+    "has", "have", "i", "in", "is", "it", "my", "of", "on", "or",
+    "that", "the", "this", "to", "was", "were", "will", "with", "you",
+    "your",
+}
+
 
 def _clean(text: str) -> str:
     """Normalise text for comparison."""
@@ -18,17 +25,20 @@ def _clean(text: str) -> str:
     return text
 
 
-def _tokenise(text: str) -> list[str]:
-    return _clean(text).split()
+def _tokenise(text: str, remove_stop_words: bool = False) -> list[str]:
+    tokens = _clean(text).split()
+    if remove_stop_words:
+        return [token for token in tokens if token not in _STOP_WORDS]
+    return tokens
 
 
 def _tfidf_cosine_similarity(text_a: str, text_b: str) -> float:
     """
-    Compute cosine similarity using raw TF (no IDF needed for pairwise).
+    Compute cosine similarity using content-word term frequencies.
     Returns 0.0 – 1.0.
     """
-    tokens_a = _tokenise(text_a)
-    tokens_b = _tokenise(text_b)
+    tokens_a = _tokenise(text_a, remove_stop_words=True)
+    tokens_b = _tokenise(text_b, remove_stop_words=True)
 
     if not tokens_a or not tokens_b:
         return 0.0
@@ -53,6 +63,15 @@ def _extract_ngrams(text: str, n: int = 6) -> set[str]:
     if len(tokens) < n:
         return set()
     return {' '.join(tokens[i:i+n]) for i in range(len(tokens) - n + 1)}
+
+
+def _ngram_overlap(text_a: str, text_b: str, n: int = 5) -> float:
+    """Return copied-phrase coverage relative to the shorter document."""
+    ngrams_a = _extract_ngrams(text_a, n)
+    ngrams_b = _extract_ngrams(text_b, n)
+    if not ngrams_a or not ngrams_b:
+        return 0.0
+    return len(ngrams_a & ngrams_b) / min(len(ngrams_a), len(ngrams_b))
 
 
 def _find_matched_segments(text_a: str, text_b: str, min_words: int = 8) -> list[str]:
@@ -96,7 +115,9 @@ def check_plagiarism(
     for i, existing in enumerate(existing_texts):
         if not existing.strip():
             continue
-        score = _tfidf_cosine_similarity(text, existing)
+        cosine = _tfidf_cosine_similarity(text, existing)
+        phrase_overlap = _ngram_overlap(text, existing)
+        score = min(1.0, (cosine * 0.7) + (phrase_overlap * 0.3))
         if score > best_score:
             best_score   = score
             best_index   = i

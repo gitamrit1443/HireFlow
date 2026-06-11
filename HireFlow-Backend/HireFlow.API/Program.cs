@@ -20,6 +20,8 @@ try
     Log.Information("Starting HireFlow API…");
 
     var builder = WebApplication.CreateBuilder(args);
+    builder.Logging.ClearProviders();
+    builder.Logging.AddConsole();
 
     // ── Full Serilog config (reads from appsettings.json "Serilog" section) ──
     // builder.Host.UseSerilog((ctx, sp, cfg) =>
@@ -58,7 +60,9 @@ try
     builder.Services.AddAuthorization();
     builder.Services.AddCorsPolicy(builder.Configuration);
     builder.Services.AddRateLimitingPolicies();
-    builder.Services.AddHangfireJobs(builder.Configuration);
+    var hangfireEnabled = builder.Configuration.GetValue("Hangfire:Enabled", true);
+    if (hangfireEnabled)
+        builder.Services.AddHangfireJobs(builder.Configuration);
     builder.Services.AddSwaggerWithJwt();
 
     builder.Services.AddControllers()
@@ -77,12 +81,17 @@ try
         o.ReportApiVersions = true;
     });
 
-    builder.Services
-        .AddHealthChecks()
-        .AddSqlServer(
+    var healthChecks = builder.Services.AddHealthChecks();
+    if (!string.Equals(
+            builder.Configuration["Database:Provider"],
+            "Sqlite",
+            StringComparison.OrdinalIgnoreCase))
+    {
+        healthChecks.AddSqlServer(
             builder.Configuration.GetConnectionString("DefaultConnection")!,
             name: "sql-server",
             tags: new[] { "db", "ready" });
+    }
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddHttpContextAccessor();
@@ -125,24 +134,30 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
 
-    app.UseHangfireDashboard("/hangfire", new DashboardOptions
+    if (hangfireEnabled)
     {
-        Authorization = new[] { new HangfireAuthFilter() }
-    });
+        app.UseHangfireDashboard("/hangfire", new DashboardOptions
+        {
+            Authorization = new[] { new HangfireAuthFilter() }
+        });
+    }
 
     app.MapHealthChecks("/health");
     app.MapControllers();
 
     // ── Recurring jobs ────────────────────────────────────────────────────
-    RecurringJob.AddOrUpdate<JobSyncBackgroundJob>(
-        "sync-external-jobs",
-        job => job.SyncExternalJobsAsync(),
-        Cron.Daily(6));
+    if (hangfireEnabled)
+    {
+        RecurringJob.AddOrUpdate<JobSyncBackgroundJob>(
+            "sync-external-jobs",
+            job => job.SyncExternalJobsAsync(),
+            Cron.Daily(6));
 
-    RecurringJob.AddOrUpdate<InterviewReminderJob>(
-        "send-interview-reminders",
-        job => job.SendRemindersAsync(),
-        Cron.Hourly());
+        RecurringJob.AddOrUpdate<InterviewReminderJob>(
+            "send-interview-reminders",
+            job => job.SendRemindersAsync(),
+            Cron.Hourly());
+    }
 
     app.Run();
 }

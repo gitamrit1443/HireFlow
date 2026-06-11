@@ -26,11 +26,21 @@ public static class DependencyInjection
     {
         // ---- EF Core ----
         services.AddDbContext<HireFlowDbContext>(options =>
+        {
+            var provider = configuration["Database:Provider"];
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            if (string.Equals(provider, "Sqlite", StringComparison.OrdinalIgnoreCase))
+            {
+                options.UseSqlite(connectionString);
+                return;
+            }
+
             options.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"),
+                connectionString,
                 sql => sql.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null)
-            )
-        );
+            );
+        });
 
         // ---- Auth ----
         services.AddScoped<TokenService>();

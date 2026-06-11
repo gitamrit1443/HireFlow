@@ -42,6 +42,9 @@ public class AnalysisController : ControllerBase
     [HttpPost("full")]
     public async Task<IActionResult> FullAnalysis([FromBody] FullAnalysisRequest request)
     {
+        if (string.IsNullOrWhiteSpace(request.CoverLetter))
+            return BadRequest(ApiResponse<object>.Fail("A cover letter is required for analysis."));
+
         // Fetch all existing cover letters for comparison
         var existingTexts = await _db.JobApplications
             .Where(a => a.CoverLetterText != null && a.CoverLetterText.Length > 50
@@ -81,10 +84,22 @@ public class AnalysisController : ControllerBase
         var json = JsonSerializer.Serialize(payload);
         var baseUrl = _config["ExternalApis:PlagiarismService:BaseUrl"] ?? "http://localhost:8000";
 
-        var response = await _http.PostAsync(
-            $"{baseUrl}/api/plagiarism/full-analysis",
-            new StringContent(json, Encoding.UTF8, "application/json")
-        );
+        HttpResponseMessage response;
+        try
+        {
+            response = await _http.PostAsync(
+                $"{baseUrl}/api/plagiarism/full-analysis",
+                new StringContent(json, Encoding.UTF8, "application/json")
+            );
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(503, ApiResponse<object>.Fail("Analysis service unavailable."));
+        }
+        catch (TaskCanceledException)
+        {
+            return StatusCode(504, ApiResponse<object>.Fail("Analysis service timed out."));
+        }
 
         if (!response.IsSuccessStatusCode)
             return StatusCode(503, ApiResponse<object>.Fail("Analysis service unavailable."));

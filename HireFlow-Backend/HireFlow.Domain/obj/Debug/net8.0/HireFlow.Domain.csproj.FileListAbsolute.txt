@@ -1,0 +1,12 @@
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\bin\Debug\net8.0\HireFlow.Domain.deps.json
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\bin\Debug\net8.0\HireFlow.Domain.dll
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\bin\Debug\net8.0\HireFlow.Domain.pdb
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\obj\Debug\net8.0\HireFlow.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\obj\Debug\net8.0\HireFlow.Domain.AssemblyInfoInputs.cache
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\obj\Debug\net8.0\HireFlow.Domain.AssemblyInfo.cs
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\obj\Debug\net8.0\HireFlow.Domain.csproj.CoreCompileInputs.cache
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\obj\Debug\net8.0\HireFlow.Domain.dll
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\obj\Debug\net8.0\refint\HireFlow.Domain.dll
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\obj\Debug\net8.0\HireFlow.Domain.pdb
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\obj\Debug\net8.0\ref\HireFlow.Domain.dll
+D:\HIREFLOW\HireFlow-Backend\HireFlow.Domain\obj\Debug\net8.0\HireFlow.Domain.sourcelink.json

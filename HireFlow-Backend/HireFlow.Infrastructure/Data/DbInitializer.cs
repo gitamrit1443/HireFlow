@@ -3,6 +3,7 @@ using HireFlow.Domain.Enums;
 using HireFlow.Infrastructure.Data;
 using HireFlow.Infrastructure.Services.Auth;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -15,6 +16,7 @@ public static class DbInitializer
         using var scope  = services.CreateScope();
         var db     = scope.ServiceProvider.GetRequiredService<HireFlowDbContext>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<HireFlowDbContext>>();
+        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
         try
         {
@@ -49,7 +51,13 @@ public static class DbInitializer
             }
         }
 
-        // ── Seed only when database is empty ───────────────────────────────
+        if (!configuration.GetValue("Database:SeedDemoData", false))
+        {
+            logger.LogInformation("Demo data seeding is disabled.");
+            return;
+        }
+
+        // Seed only when explicitly enabled and the database is empty.
         if (await db.Users.IgnoreQueryFilters().AnyAsync())
         {
             logger.LogInformation("Database already seeded — skipping.");

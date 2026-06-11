@@ -10,7 +10,7 @@ class PlagiarismCheckRequest(BaseModel):
     cover_letter: str = Field(..., description="Cover letter text to check")
     job_title: str = Field(default="", description="Job being applied to")
     existing_texts: list[str] = Field(
-        default=[],
+        default_factory=list,
         description="All other cover letters already in the system (passed by backend)"
     )
 
@@ -39,7 +39,7 @@ class AnalysisRequest(BaseModel):
     cover_letter: str
     resume_text: str = ""
     job_title: str = ""
-    existing_cover_letters: list[str] = []
+    existing_cover_letters: list[str] = Field(default_factory=list)
     applications_count_today: int = 0
     same_ip_count: int = 0
 
@@ -56,7 +56,7 @@ class PlagiarismResult(BaseModel):
     similarity_percent: int   = Field(..., description="0 - 100")
     is_plagiarised: bool      = Field(..., description="True if > 70% similar")
     risk_level: str           = Field(..., description="low | medium | high | critical")
-    matched_segments: list[str] = Field(default=[], description="Suspicious matched phrases")
+    matched_segments: list[str] = Field(default_factory=list, description="Suspicious matched phrases")
     top_match_index: Optional[int] = Field(default=None, description="Index of most similar existing text")
     verdict: str
 
@@ -67,7 +67,7 @@ class SpamResult(BaseModel):
     spam_score: float         = Field(..., description="0.0 - 1.0")
     spam_percent: int
     risk_level: str
-    flags: list[str]          = Field(default=[], description="Reasons flagged as spam")
+    flags: list[str]          = Field(default_factory=list, description="Reasons flagged as spam")
     verdict: str
 
 

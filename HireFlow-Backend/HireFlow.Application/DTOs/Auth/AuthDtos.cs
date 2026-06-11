@@ -37,6 +37,12 @@ public class RegisterRequest
 
     public string? Company { get; set; }
     public string? PhoneNumber { get; set; }
+    public string? Title { get; set; }
+    public string? Department { get; set; }
+    public string? Location { get; set; }
+    [Range(0, 50)]
+    public int? ExperienceYears { get; set; }
+    public List<string> Skills { get; set; } = new();
 }
 
 public class LoginResponse
@@ -62,6 +68,11 @@ public class UserDto
     public string? ProfileImageUrl { get; set; }
     public bool TwoFactorEnabled { get; set; }
     public bool IsEmailVerified { get; set; }
+    public string? Title { get; set; }
+    public string? Department { get; set; }
+    public string? Location { get; set; }
+    public int? ExperienceYears { get; set; }
+    public List<string> Skills { get; set; } = new();
 }
 
 public class TwoFactorSetupResponse
