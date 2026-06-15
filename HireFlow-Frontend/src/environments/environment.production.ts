@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.hireflow.com/api/v1',
-  plagiarismServiceUrl: 'https://plagiarism.hireflow.com/api',
+  apiUrl: 'http://hireflow-api-amrit.azurewebsites.net/',
+  plagiarismServiceUrl: 'https://hireflow-plagiarism-dja8hgabdjfdbqhg.malaysiawest-01.azurewebsites.net/',
 };

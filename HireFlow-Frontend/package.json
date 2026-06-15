@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@angular/build": "20.3.24",
-    "@angular/cli": "20.3.24",
+    "@angular/cli": "^20.3.28",
     "@angular/compiler-cli": "20.3.24",
     "autoprefixer": "^10.4.21",
     "daisyui": "^4.12.24",

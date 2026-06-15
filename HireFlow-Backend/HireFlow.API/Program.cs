@@ -7,6 +7,7 @@ using Hangfire;
 using Hangfire.Dashboard;
 using Serilog;
 using Serilog.Events;
+using Microsoft.EntityFrameworkCore;
 
 // Bootstrap logger — captures any startup crash before full Serilog is configured
 Log.Logger = new LoggerConfiguration()
@@ -80,6 +81,8 @@ try
         o.AssumeDefaultVersionWhenUnspecified = true;
         o.ReportApiVersions = true;
     });
+
+    builder.Services.AddDbContext<HireFlowDbContext>(options=>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
     var healthChecks = builder.Services.AddHealthChecks();
     if (!string.Equals(

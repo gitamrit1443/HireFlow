@@ -1,0 +1,12 @@
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/bin/Release/net8.0/HireFlow.Domain.deps.json
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/bin/Release/net8.0/HireFlow.Domain.dll
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/bin/Release/net8.0/HireFlow.Domain.pdb
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/obj/Release/net8.0/HireFlow.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/obj/Release/net8.0/HireFlow.Domain.AssemblyInfoInputs.cache
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/obj/Release/net8.0/HireFlow.Domain.AssemblyInfo.cs
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/obj/Release/net8.0/HireFlow.Domain.csproj.CoreCompileInputs.cache
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/obj/Release/net8.0/HireFlow.Domain.sourcelink.json
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/obj/Release/net8.0/HireFlow.Domain.dll
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/obj/Release/net8.0/refint/HireFlow.Domain.dll
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/obj/Release/net8.0/HireFlow.Domain.pdb
+/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/obj/Release/net8.0/ref/HireFlow.Domain.dll

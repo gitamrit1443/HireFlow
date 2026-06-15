@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "eC980K5DpAs=",
+  "dgSpecHash": "jWSWhErmM/Q=",
   "success": true,
-  "projectFilePath": "D:\\HIREFLOW\\HireFlow-Backend\\HireFlow.Domain\\HireFlow.Domain.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/workspaces/HireFlow/HireFlow-Backend/HireFlow.Domain/HireFlow.Domain.csproj",
+  "expectedPackageFiles": [
+    "/home/codespace/.nuget/packages/microsoft.netcore.app.ref/8.0.25/microsoft.netcore.app.ref.8.0.25.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.25/microsoft.aspnetcore.app.ref.8.0.25.nupkg.sha512"
+  ],
   "logs": []
 }
