@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/3816677b-ee2c-489d-8f32-5da4f73107b4/resourceGroups/hireflow-rg/providers/Microsoft.Web/sites/hireflow-api-amrit",
+    "appService.deploySubpath": "HireFlow-Backend\\HireFlow.API"
+}
