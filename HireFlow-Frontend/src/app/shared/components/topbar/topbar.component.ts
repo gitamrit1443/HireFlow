@@ -313,16 +313,19 @@ export class TopbarComponent {
     this.passwordOpen.set(true);
   }
 
-  savePassword(): void {
-    if (this.passwordDraft.next.length < 6) {
-      this.passwordError.set('New password must be at least 6 characters.');
+  async savePassword(): Promise<void> {
+    if (this.passwordDraft.next.length < 8) {
+      this.passwordError.set('New password must be at least 8 characters.');
       return;
     }
     if (this.passwordDraft.next !== this.passwordDraft.confirm) {
       this.passwordError.set('New password and confirmation do not match.');
       return;
     }
-    const result = this.auth.changePassword(this.passwordDraft.current, this.passwordDraft.next);
+    const result = await this.auth.changePassword(
+      this.passwordDraft.current,
+      this.passwordDraft.next
+    );
     if (!result.success) {
       this.passwordError.set(result.message);
       return;

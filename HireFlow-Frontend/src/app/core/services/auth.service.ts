@@ -122,16 +122,31 @@ export class AuthService {
     localStorage.setItem('hireflow_user', JSON.stringify(updated));
   }
 
-  changePassword(currentPassword: string, newPassword: string): { success: boolean; message: string } {
+  async changePassword(
+    currentPassword: string,
+    newPassword: string
+  ): Promise<{ success: boolean; message: string }> {
     const user = this.currentUser();
     if (!user) return { success: false, message: 'Please sign in again.' };
 
-    this.http.post(`${environment.apiUrl}/auth/change-password`, {
-      currentPassword,
-      newPassword,
-      confirmPassword: newPassword
-    }).subscribe();
-    return { success: true, message: 'Password update requested.' };
+    try {
+      const response = await firstValueFrom(
+        this.http.post<any>(`${environment.apiUrl}/auth/change-password`, {
+          currentPassword,
+          newPassword,
+          confirmPassword: newPassword
+        })
+      );
+      return {
+        success: response?.success === true,
+        message: response?.message ?? 'Password changed successfully.'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: this._apiError(error, 'Unable to change password.')
+      };
+    }
   }
 
   logout(): void {
@@ -190,7 +205,7 @@ export class AuthService {
       if (validationErrors.length) return validationErrors.join(' ');
     }
     if (error?.status === 0) {
-      return 'Backend is not reachable. Start HireFlow.API on http://localhost:5000.';
+      return 'Backend connection failed. Confirm HireFlow.API is running on port 5000.';
     }
     return error?.error?.message
       ?? error?.error?.error

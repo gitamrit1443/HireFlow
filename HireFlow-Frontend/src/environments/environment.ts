@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000/api/v1',
+  apiUrl: 'https://hireflow-backend-sa2r.onrender.com',
   plagiarismServiceUrl: 'http://localhost:8000/api',
 };

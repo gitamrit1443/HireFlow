@@ -139,22 +139,37 @@ import { AuthService } from '../../../core/services/auth.service';
 
         <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-6">
           <h2 class="text-sm font-bold text-slate-900 mb-4">Change Password</h2>
-          <form class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            @for (field of passwordFields; track field.label) {
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1.5">
-                  {{ field.label }}
-                </label>
-                <input [type]="field.type" [placeholder]="field.placeholder"
-                  class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg
-                         focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
-              </div>
-            }
-            <div class="md:col-span-3 flex justify-end">
-              <button type="button"
+          <form (ngSubmit)="updatePassword()" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5">Current Password</label>
+              <input [(ngModel)]="passwordDraft.current" name="currentPassword" type="password"
+                autocomplete="current-password" placeholder="Enter current password"
+                class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5">New Password</label>
+              <input [(ngModel)]="passwordDraft.next" name="newPassword" type="password"
+                autocomplete="new-password" placeholder="Min 8 characters"
+                class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5">Confirm Password</label>
+              <input [(ngModel)]="passwordDraft.confirm" name="confirmPassword" type="password"
+                autocomplete="new-password" placeholder="Repeat new password"
+                class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+            </div>
+            <div class="md:col-span-3 flex items-center justify-between gap-3">
+              <p class="text-xs font-semibold"
+                 [ngClass]="passwordSuccess() ? 'text-emerald-600' : 'text-rose-600'">
+                {{ passwordMessage() }}
+              </p>
+              <button type="submit" [disabled]="passwordUpdating()"
                 class="btn btn-sm btn-ghost border border-slate-200 text-slate-600
                        hover:bg-slate-50 normal-case font-medium">
-                Update Password
+                {{ passwordUpdating() ? 'Updating...' : 'Update Password' }}
               </button>
             </div>
           </form>
@@ -411,6 +426,10 @@ export class SettingsComponent {
 
   activeTab  = signal<'profile' | 'team' | 'notifications' | 'workspace'>('profile');
   profileSaved = signal(false);
+  passwordUpdating = signal(false);
+  passwordSuccess = signal(false);
+  passwordMessage = signal('');
+  passwordDraft = { current: '', next: '', confirm: '' };
   inviteEmail  = '';
   inviteRole   = 'recruiter';
   inviteSent   = signal(false);
@@ -440,12 +459,6 @@ export class SettingsComponent {
     { value:'America/Los_Angeles',label:'PST — Pacific Standard Time (UTC-8)' },
   ];
 
-  readonly passwordFields = [
-    { label:'Current Password', type:'password', placeholder:'Enter current password' },
-    { label:'New Password',     type:'password', placeholder:'Min 8 characters' },
-    { label:'Confirm Password', type:'password', placeholder:'Repeat new password' },
-  ];
-
   saveProfile(): void {
     if (this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
@@ -461,6 +474,37 @@ export class SettingsComponent {
     });
     this.profileSaved.set(true);
     setTimeout(() => this.profileSaved.set(false), 2500);
+  }
+
+  async updatePassword(): Promise<void> {
+    this.passwordMessage.set('');
+    this.passwordSuccess.set(false);
+
+    if (!this.passwordDraft.current) {
+      this.passwordMessage.set('Enter your current password.');
+      return;
+    }
+    if (this.passwordDraft.next.length < 8) {
+      this.passwordMessage.set('New password must be at least 8 characters.');
+      return;
+    }
+    if (this.passwordDraft.next !== this.passwordDraft.confirm) {
+      this.passwordMessage.set('New password and confirmation do not match.');
+      return;
+    }
+
+    this.passwordUpdating.set(true);
+    const result = await this.auth.changePassword(
+      this.passwordDraft.current,
+      this.passwordDraft.next
+    );
+    this.passwordUpdating.set(false);
+    this.passwordSuccess.set(result.success);
+    this.passwordMessage.set(result.message);
+
+    if (result.success) {
+      this.passwordDraft = { current: '', next: '', confirm: '' };
+    }
   }
 
   readonly teamMembers = [

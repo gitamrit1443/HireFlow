@@ -314,23 +314,25 @@ interface JobRecommendation {
                 </div>
               }
 
-              <div class="bg-amber-50 rounded-xl border border-amber-100 p-4">
+              <button
+                (click)="activeSection.set('profile')"
+                class="w-full bg-indigo-50 rounded-xl border border-indigo-100 p-4
+                       text-left transition-colors hover:bg-indigo-100/70">
                 <div class="flex items-start gap-2">
-                  <svg class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none"
+                  <svg class="w-4 h-4 text-indigo-500 flex-shrink-0 mt-0.5" fill="none"
                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                     <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
+                      d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/>
                   </svg>
-                  <div>
-                    <p class="text-xs font-bold text-amber-800">Update from Rahul Mehta</p>
-                    <p class="text-xs text-amber-700 mt-0.5 leading-relaxed">
-                      Your technical interview is confirmed for Apr 22 at 2:00 PM.
-                      Please be ready 5 minutes early.
+                  <div class="flex-1">
+                    <p class="text-xs font-bold text-indigo-800">Keep your profile updated</p>
+                    <p class="text-xs text-indigo-700 mt-0.5 leading-relaxed">
+                      Add your latest skills, experience and resume to improve job matches.
                     </p>
-                    <p class="text-xs text-amber-500 mt-1.5 font-medium">2 hours ago</p>
+                    <p class="text-xs text-indigo-600 mt-1.5 font-semibold">Open profile →</p>
                   </div>
                 </div>
-              </div>
+              </button>
             </div>
 
           </div>
@@ -931,16 +933,19 @@ export class CandidateDashboardComponent implements OnInit {
     this.passwordOpen.set(true);
   }
 
-  savePassword(): void {
-    if (this.passwordDraft.next.length < 6) {
-      this.passwordError.set('New password must be at least 6 characters.');
+  async savePassword(): Promise<void> {
+    if (this.passwordDraft.next.length < 8) {
+      this.passwordError.set('New password must be at least 8 characters.');
       return;
     }
     if (this.passwordDraft.next !== this.passwordDraft.confirm) {
       this.passwordError.set('New password and confirmation do not match.');
       return;
     }
-    const result = this.auth.changePassword(this.passwordDraft.current, this.passwordDraft.next);
+    const result = await this.auth.changePassword(
+      this.passwordDraft.current,
+      this.passwordDraft.next
+    );
     if (!result.success) {
       this.passwordError.set(result.message);
       return;
@@ -987,7 +992,7 @@ export class CandidateDashboardComponent implements OnInit {
       stageIndex:   3,
       status:       'active',
       lastUpdate:   'Apr 22, 2025',
-      recruiterName:'Rahul Mehta',
+      recruiterName:'Recruitment Team',
       nextStep:     'Technical interview today at 2:00 PM',
     },
     {
