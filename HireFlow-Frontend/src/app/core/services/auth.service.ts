@@ -205,7 +205,7 @@ export class AuthService {
       if (validationErrors.length) return validationErrors.join(' ');
     }
     if (error?.status === 0) {
-      return 'Backend connection failed. Confirm HireFlow.API is running on port 5000.';
+     return 'Backend connection failed. Please try again later.';
     }
     return error?.error?.message
       ?? error?.error?.error
