@@ -58,7 +58,16 @@ try
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddJwtAuthentication(builder.Configuration);
     builder.Services.AddAuthorization();
-    builder.Services.AddCorsPolicy(builder.Configuration);
+    builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMyFrontend", policy =>
+    {
+        policy.WithOrigins("https://gentle-beach-067f45c00.7.azurestaticapps.net") // <--- Yeh tumhara Azure ASWA URL (Bina last slash ke)
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+              // Agar authentication/cookies/tokens use kar rahe ho toh .AllowCredentials() bhi add kar dena
+    });
+});
     builder.Services.AddRateLimitingPolicies();
     var hangfireEnabled = builder.Configuration.GetValue("Hangfire:Enabled", true);
     if (hangfireEnabled)
@@ -129,7 +138,7 @@ try
     }
 
     app.UseHttpsRedirection();
-    app.UseCors("HireFlowCors");
+   app.UseCors("AllowMyFrontend"); 
     app.UseRateLimiter();
     app.UseAuthentication();
     app.UseAuthorization();
