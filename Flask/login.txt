@@ -1,0 +1,7 @@
+login page
+accept username and password
+session store
+redirect to welcome page
+logout
+python -m venv venv
+venv\Scripts\activate
