@@ -1,0 +1,150 @@
+@baseUrl = https://localhost:7001
+@recruiterPassword = paste-from-appsettings-development
+@candidatePassword = paste-from-appsettings-development
+@token = paste-token-here
+@jobId = paste-job-id-here
+@applicationId = paste-application-id-here
+@interviewId = paste-interview-id-here
+@meetingId = paste-meeting-id-here
+@roomCode = paste-room-code-here
+
+### Health
+GET {{baseUrl}}/api/health
+
+### Login recruiter
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "recruiter@hireflow.com",
+  "password": "{{recruiterPassword}}"
+}
+
+### Login candidate
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "candidate@hireflow.com",
+  "password": "{{candidatePassword}}"
+}
+
+### Me
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Get jobs public
+GET {{baseUrl}}/api/jobs
+
+### Create job recruiter/admin
+POST {{baseUrl}}/api/jobs
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Junior .NET Developer",
+  "description": "Work on ASP.NET Core Web API and SQL Server.",
+  "location": "Remote",
+  "employmentType": "Full-time",
+  "salary": 450000
+}
+
+### Candidate apply
+POST {{baseUrl}}/api/applications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "jobId": "{{jobId}}",
+  "resumeUrl": "https://example.com/resume.pdf",
+  "coverLetter": "I am interested in this role."
+}
+
+### Candidate applications
+GET {{baseUrl}}/api/applications/mine
+Authorization: Bearer {{token}}
+
+### Recruiter candidate list
+GET {{baseUrl}}/api/candidates
+Authorization: Bearer {{token}}
+
+### Update candidate stage
+PATCH {{baseUrl}}/api/candidates/stage
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "applicationId": "{{applicationId}}",
+  "stage": "Shortlisted"
+}
+
+### Schedule interview
+POST {{baseUrl}}/api/interviews
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "applicationId": "{{applicationId}}",
+  "scheduledAt": "2026-07-15T10:00:00Z",
+  "mode": "Online",
+  "meetingLink": "https://meet.google.com/demo"
+}
+
+### Create HireMeet
+POST {{baseUrl}}/api/hiremeet
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Technical Round",
+  "startTime": "2026-07-15T10:00:00Z",
+  "applicationId": "{{applicationId}}"
+}
+
+### Join HireMeet public
+POST {{baseUrl}}/api/hiremeet/join
+Content-Type: application/json
+
+{
+  "roomCode": "{{roomCode}}",
+  "candidateName": "Demo Candidate"
+}
+
+### Plagiarism check recruiter/admin
+POST {{baseUrl}}/api/plagiarism/check
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "text": "Paste candidate answer or resume paragraph here."
+}
+
+### Onboarding status
+GET {{baseUrl}}/api/onboarding/status
+Authorization: Bearer {{token}}
+
+### Complete candidate onboarding
+PUT {{baseUrl}}/api/onboarding/candidate
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fullName": "Demo Candidate",
+  "phone": "+91 98765 43210",
+  "resumeUrl": "https://example.com/resume.pdf",
+  "skills": ["C#", "ASP.NET Core", "SQL Server"],
+  "experienceSummary": "I build backend APIs using ASP.NET Core and SQL Server."
+}
+
+### Complete recruiter onboarding
+PUT {{baseUrl}}/api/onboarding/recruiter
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fullName": "Demo Recruiter",
+  "designation": "HR Manager",
+  "companyName": "HireFlow Demo Company",
+  "website": "https://hireflow.local",
+  "location": "Delhi, India"
+}
