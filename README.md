@@ -328,8 +328,8 @@ HireFlow is deployed across multiple cloud platforms:
 | Layer | Platform | Details |
 |---|---|---|
 | **Frontend** | ![Vercel](https://img.shields.io/badge/Vercel-000?style=flat-square&logo=vercel) | Angular SPA with automatic CI/CD on push |
-| **Backend API** | ![Azure](https://img.shields.io/badge/Azure_App_Service-0078D4?style=flat-square&logo=microsoftazure&logoColor=white) | ASP.NET Core 8 Web API |
-| **Database** | ![Railway](https://img.shields.io/badge/Railway-0B0D0E?style=flat-square&logo=railway) | Microsoft SQL Server instance |
+| **Backend API** | ![Railway](https://img.shields.io/badge/Railway-0B0D0E?style=flat-square&logo=railway) | ASP.NET Core 8 Web API |
+| **DataBase** | ![Azure](https://img.shields.io/badge/Azure_App_Service-0078D4?style=flat-square&logo=microsoftazure&logoColor=white) | Microsoft SQL Server instance |
 
 ### Environment Variables (Production)
 
