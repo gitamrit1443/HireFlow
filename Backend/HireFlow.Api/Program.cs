@@ -130,10 +130,10 @@ if (app.Environment.IsDevelopment())
 }
 
 // Keep local HTTP stable for phone/laptop testing. HTTPS redirection can break LAN/mobile demos.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
+// if (!app.Environment.IsDevelopment())
+// {
+//     app.UseHttpsRedirection();
+// }
 
 app.UseCors("LocalFrontend");
 app.UseAuthentication();
