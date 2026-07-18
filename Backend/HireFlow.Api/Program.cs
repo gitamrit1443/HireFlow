@@ -123,11 +123,8 @@ using (var scope = app.Services.CreateScope())
     await DataSeeder.SeedAsync(db);
 }
 
-if (app.Environment.IsDevelopment())
-{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
 // Keep local HTTP stable for phone/laptop testing. HTTPS redirection can break LAN/mobile demos.
 // if (!app.Environment.IsDevelopment())
