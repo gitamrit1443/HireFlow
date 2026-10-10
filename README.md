@@ -102,8 +102,8 @@
 <div align="center">
 
 <!-- Replace YOUR_VIDEO_ID with your YouTube video ID (the part after v= in the URL) -->
-<a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID">
-  <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg" alt="HireFlow Demo Video" width="100%"/>
+<a href="https://drive.google.com/file/d/1uei9ER27PZvL5sk3jCo2CXmS8MwkPkPW/view?usp=sharing">
+  <img src="https://raw.githubusercontent.com/gitamrit1443/HireFlow/main/Frontend/assets/Screenshots/Screenshot.png" alt="HireFlow Demo Video" width="100%"/>
 </a>
 
 ▶️ **Click the thumbnail above to watch the full project demo**
