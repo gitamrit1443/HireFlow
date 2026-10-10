@@ -46,6 +46,7 @@
 ## 📋 Table of Contents
 
 - [✨ Features](#-features)
+- [🎬 Demo Video](#-demo-video)
 - [🖥️ Screenshots](#️-screenshots)
 - [🛠️ Tech Stack](#️-tech-stack)
 - [🏗️ Architecture](#️-architecture)
@@ -93,6 +94,28 @@
 - Real-time in-app notifications for stage updates
 - Email trigger support for candidate communication
 - Activity feed and audit trail
+
+---
+
+## 🎬 Demo Video
+
+<div align="center">
+
+<!-- Replace YOUR_VIDEO_ID with your YouTube video ID (the part after v= in the URL) -->
+<a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID">
+  <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg" alt="HireFlow Demo Video" width="100%"/>
+</a>
+
+▶️ **Click the thumbnail above to watch the full project demo**
+
+</div>
+
+<!--
+Alternative: GitHub-hosted video.
+Edit this README on github.com, drag & drop your .mp4 into the editor,
+and GitHub will generate a link that renders as an inline video player.
+Paste that link here instead of the thumbnail above.
+-->
 
 ---
 
